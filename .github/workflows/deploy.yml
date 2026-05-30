@@ -22,7 +22,7 @@ jobs:
           script: |
             cd /home/ubuntu/docker-project
             git pull origin main
-            docker build -t sahana-website .
-            docker stop sahana-container || true
-            docker rm sahana-container || true
-            docker run -d -p 80:80 --name sahana-container sahana-website
+            sudo docker build -t sahana-website .
+            sudo docker stop sahana-container || true
+            sudo docker rm sahana-container || true
+            sudo docker run -d -p 80:80 --name sahana-container sahana-website
