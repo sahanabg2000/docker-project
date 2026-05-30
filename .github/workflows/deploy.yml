@@ -1,0 +1,28 @@
+name: Deploy Docker Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/docker-project
+            git pull origin main
+            docker build -t sahana-website .
+            docker stop sahana-container || true
+            docker rm sahana-container || true
+            docker run -d -p 80:80 --name sahana-container sahana-website
